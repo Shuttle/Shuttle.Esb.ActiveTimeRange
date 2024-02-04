@@ -9,7 +9,7 @@ The ActiveTimeRange module for Shuttle.Esb aborts pipeline processing when the c
 ## Configuration
 
 ```c#
-services.AddActiveTimeRangeModule(builder => {
+services.AddActiveTimeRange(builder => {
 	builder.Options.ActiveFromTime = "10:00";
 	builder.Options.ActiveToTime = "14:00";
 });
