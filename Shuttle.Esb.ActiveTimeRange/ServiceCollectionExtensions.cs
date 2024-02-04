@@ -2,13 +2,12 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Shuttle.Core.Contract;
-using Shuttle.Core.Pipelines;
 
 namespace Shuttle.Esb.ActiveTimeRange
 {
     public static class ServiceCollectionExtensions
     {
-        public static IServiceCollection AddActiveTimeRangeModule(this IServiceCollection services,
+        public static IServiceCollection AddActiveTimeRange(this IServiceCollection services,
             Action<ActiveTimeRangeBuilder> builder = null)
         {
             Guard.AgainstNull(services, nameof(services));
