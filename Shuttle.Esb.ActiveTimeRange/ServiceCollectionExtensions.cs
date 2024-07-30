@@ -16,8 +16,6 @@ namespace Shuttle.Esb.ActiveTimeRange
 
             builder?.Invoke(activeTimeRangeBuilder);
 
-            services.TryAddSingleton<ActiveTimeRangeObserver>();
-            
             services.AddOptions<ActiveTimeRangeOptions>().Configure(options =>
             {
                 options.ActiveFromTime = activeTimeRangeBuilder.Options.ActiveFromTime;
