@@ -3,44 +3,37 @@ using System.Threading;
 using System.Threading.Tasks;
 using Shuttle.Core.Contract;
 using Shuttle.Core.Pipelines;
-using Shuttle.Core.Threading;
 
-namespace Shuttle.Esb.ActiveTimeRange
+namespace Shuttle.Esb.ActiveTimeRange;
+
+internal class ActiveTimeRangeObserver : IPipelineObserver<OnPipelineStarting>
 {
-	internal class ActiveTimeRangeObserver : IPipelineObserver<OnPipelineStarting>
-	{
-		private readonly ActiveTimeRange _activeTimeRange;
-		private readonly CancellationToken _cancellationToken;
+    private readonly ActiveTimeRange _activeTimeRange;
+    private readonly CancellationToken _cancellationToken;
 
-		public ActiveTimeRangeObserver(ActiveTimeRange activeTimeRange, CancellationToken cancellationToken)
-		{
-			_activeTimeRange = Guard.AgainstNull(activeTimeRange, nameof(activeTimeRange));
-			_cancellationToken = cancellationToken;
-		}
+    public ActiveTimeRangeObserver(ActiveTimeRange activeTimeRange, CancellationToken cancellationToken)
+    {
+        _activeTimeRange = Guard.AgainstNull(activeTimeRange);
+        _cancellationToken = cancellationToken;
+    }
 
-		public void Execute(OnPipelineStarting pipelineEvent)
-		{
-			ExecuteAsync(pipelineEvent).GetAwaiter().GetResult();
-		}
+    public async Task ExecuteAsync(IPipelineContext<OnPipelineStarting> pipelineContext)
+    {
+        const int sleep = 15000;
 
-		public async Task ExecuteAsync(OnPipelineStarting pipelineEvent)
-		{
-			const int sleep = 15000;
+        if (_activeTimeRange.Active())
+        {
+            return;
+        }
 
-			if (_activeTimeRange.Active())
-			{
-				return;
-			}
+        pipelineContext.Pipeline.Abort();
 
-			pipelineEvent.Pipeline.Abort();
-
-			try
-			{
-				await Task.Delay(sleep, _cancellationToken);
-			}
-			catch (OperationCanceledException)
-			{
-			}
-		}
+        try
+        {
+            await Task.Delay(sleep, _cancellationToken);
+        }
+        catch (OperationCanceledException)
+        {
+        }
     }
 }
