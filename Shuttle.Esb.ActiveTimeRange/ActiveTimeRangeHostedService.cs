@@ -52,6 +52,6 @@ public class ActiveTimeRangeHostedService : IHostedService
             return;
         }
 
-        e.Pipeline.RegisterObserver(new ActiveTimeRangeObserver(_activeTimeRange, _cancellationTokenSource.Get().Token));
+        e.Pipeline.AddObserver(new ActiveTimeRangeObserver(_activeTimeRange, _cancellationTokenSource.Get().Token));
     }
 }
