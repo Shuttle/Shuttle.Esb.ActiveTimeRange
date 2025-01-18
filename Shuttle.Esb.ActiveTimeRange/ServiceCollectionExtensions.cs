@@ -1,5 +1,6 @@
 ﻿using System;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using Shuttle.Core.Contract;
 
 namespace Shuttle.Esb.ActiveTimeRange;
@@ -12,12 +13,7 @@ public static class ServiceCollectionExtensions
 
         builder?.Invoke(activeTimeRangeBuilder);
 
-        services.AddOptions<ActiveTimeRangeOptions>().Configure(options =>
-        {
-            options.ActiveFromTime = activeTimeRangeBuilder.Options.ActiveFromTime;
-            options.ActiveToTime = activeTimeRangeBuilder.Options.ActiveToTime;
-        });
-
+        services.AddSingleton(Options.Create(activeTimeRangeBuilder.Options));
         services.AddHostedService<ActiveTimeRangeHostedService>();
 
         return services;
