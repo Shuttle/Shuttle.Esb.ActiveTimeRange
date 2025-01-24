@@ -13,7 +13,12 @@ public static class ServiceCollectionExtensions
 
         builder?.Invoke(activeTimeRangeBuilder);
 
-        services.AddSingleton(Options.Create(activeTimeRangeBuilder.Options));
+        services.AddOptions<ActiveTimeRangeOptions>().Configure(options =>
+        {
+            options.ActiveFromTime = activeTimeRangeBuilder.Options.ActiveFromTime;
+            options.ActiveToTime = activeTimeRangeBuilder.Options.ActiveToTime;
+        });
+
         services.AddHostedService<ActiveTimeRangeHostedService>();
 
         return services;
