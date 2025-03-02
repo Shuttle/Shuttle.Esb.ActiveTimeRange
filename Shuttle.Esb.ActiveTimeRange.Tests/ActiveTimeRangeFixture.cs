@@ -11,11 +11,11 @@ public class ActiveTimeRangeFixture
     {
         var range = new ActiveTimeRange("*", "*");
 
-        var now = DateTime.Now;
+        var now = DateTimeOffset.Now;
 
         Assert.That(range.Active(now), Is.True);
-        Assert.That(range.Active(new(now.Year, now.Month, now.Day, 0, 1, 0)), Is.True);
-        Assert.That(range.Active(new(now.Year, now.Month, now.Day, 23, 59, 0)), Is.True);
+        Assert.That(range.Active(new(now.Year, now.Month, now.Day, 0, 1, 0, TimeSpan.Zero)), Is.True);
+        Assert.That(range.Active(new(now.Year, now.Month, now.Day, 23, 59, 0, TimeSpan.Zero)), Is.True);
     }
 
     [Test]
@@ -23,16 +23,16 @@ public class ActiveTimeRangeFixture
     {
         var range = new ActiveTimeRange("13:30", "13:35");
 
-        var now = DateTime.Now;
+        var now = DateTimeOffset.Now;
 
-        Assert.That(range.Active(new(now.Year, now.Month, now.Day, 12, 30, 0)), Is.False);
-        Assert.That(range.Active(new(now.Year, now.Month, now.Day, 13, 29, 0)), Is.False);
+        Assert.That(range.Active(new(now.Year, now.Month, now.Day, 12, 30, 0, TimeSpan.Zero)), Is.False);
+        Assert.That(range.Active(new(now.Year, now.Month, now.Day, 13, 29, 0, TimeSpan.Zero)), Is.False);
 
-        Assert.That(range.Active(new(now.Year, now.Month, now.Day, 13, 30, 0)), Is.True);
-        Assert.That(range.Active(new(now.Year, now.Month, now.Day, 13, 32, 0)), Is.True);
-        Assert.That(range.Active(new(now.Year, now.Month, now.Day, 13, 35, 0)), Is.True);
+        Assert.That(range.Active(new(now.Year, now.Month, now.Day, 13, 30, 0, TimeSpan.Zero)), Is.True);
+        Assert.That(range.Active(new(now.Year, now.Month, now.Day, 13, 32, 0, TimeSpan.Zero)), Is.True);
+        Assert.That(range.Active(new(now.Year, now.Month, now.Day, 13, 35, 0, TimeSpan.Zero)), Is.True);
 
-        Assert.That(range.Active(new(now.Year, now.Month, now.Day, 13, 36, 0)), Is.False);
-        Assert.That(range.Active(new(now.Year, now.Month, now.Day, 14, 30, 0)), Is.False);
+        Assert.That(range.Active(new(now.Year, now.Month, now.Day, 13, 36, 0, TimeSpan.Zero)), Is.False);
+        Assert.That(range.Active(new(now.Year, now.Month, now.Day, 14, 30, 0, TimeSpan.Zero)), Is.False);
     }
 }

@@ -16,12 +16,11 @@ public class ActiveTimeRange
         var fromTime = string.IsNullOrEmpty(from) ? "*" : from;
         var toTime = string.IsNullOrEmpty(to) ? "*" : to;
 
-        DateTime dt;
+        DateTimeOffset dt;
 
         if (!fromTime.Equals("*"))
         {
-            if (!DateTime.TryParseExact(fromTime, "HH:mm", CultureInfo.InvariantCulture, DateTimeStyles.None,
-                    out dt))
+            if (!DateTimeOffset.TryParseExact(fromTime, "HH:mm", CultureInfo.InvariantCulture, DateTimeStyles.None, out dt))
             {
                 throw new ArgumentException(string.Format(Resources.InvalidActiveFromTime, fromTime));
             }
@@ -37,7 +36,7 @@ public class ActiveTimeRange
 
         if (!toTime.Equals("*"))
         {
-            if (!DateTime.TryParseExact(toTime, "HH:mm", CultureInfo.InvariantCulture, DateTimeStyles.None, out dt))
+            if (!DateTimeOffset.TryParseExact(toTime, "HH:mm", CultureInfo.InvariantCulture, DateTimeStyles.None, out dt))
             {
                 throw new ArgumentException(string.Format(Resources.InvalidActiveToTime, toTime));
             }
@@ -54,14 +53,14 @@ public class ActiveTimeRange
 
     public bool Active()
     {
-        return Active(DateTime.Now);
+        return Active(DateTimeOffset.Now);
     }
 
-    public bool Active(DateTime date)
+    public bool Active(DateTimeOffset date)
     {
         return
-            date >= date.Date.AddHours(_activeFromHour).AddMinutes(_activeFromMinute)
+            date >= new DateTimeOffset(date.Date, TimeSpan.Zero).AddHours(_activeFromHour).AddMinutes(_activeFromMinute)
             &&
-            date <= date.Date.AddHours(_activeToHour).AddMinutes(_activeToMinute);
+            date <= new DateTimeOffset(date.Date, TimeSpan.Zero).AddHours(_activeToHour).AddMinutes(_activeToMinute);
     }
 }
